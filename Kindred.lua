@@ -18,7 +18,7 @@ require('PussyDamageLib')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.02
+    local Version = 0.03
     
     local Files = {
         Lua = {
@@ -216,7 +216,7 @@ end
 function Kindred:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred"})
+self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.03"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
@@ -291,7 +291,7 @@ local Mode = GetMode()
 		self:LastHit()	
 	end	
 	self:KillSteal()
-	
+
 	if self.Menu.Ult.Move:Value() and myHero:GetSpellData(_R).level > 0 then
 		self:RBuff()
 	end
@@ -354,11 +354,12 @@ function Kindred:AutoUltAlly(ally)
 end
 
 function Kindred:Combo()
-local target = GetTarget(myHero.range)     	
+local target = GetTarget(myHero.range + 340)     	
 if target == nil then return end
 	if IsValid(target) then
+	local QDmg = getdmg("Q", target, myHero)
 		
-		if self.Menu.Combo.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
+		if self.Menu.Combo.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") and QDmg < target.health then 
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
 				Control.CastSpell(HK_Q, target.pos)				
 			end
@@ -379,7 +380,7 @@ if target == nil then return end
 end	
 
 function Kindred:Harass()
-local target = GetTarget(myHero.range)    	
+local target = GetTarget(myHero.range +340)    	
 if target == nil then return end
 	if IsValid(target) and myHero.mana/myHero.maxMana >= self.Menu.Harass.Mana:Value() / 100 then
 			
@@ -407,7 +408,7 @@ function Kindred:LastHit()
 	for i = 1, Game.MinionCount() do
     local minion = Game.Minion(i)
 
-		if myHero.pos:DistanceTo(minion.pos) <= myHero.range and minion.team == TEAM_ENEMY and IsValid(minion) then
+		if myHero.pos:DistanceTo(minion.pos) <= myHero.range +340 and minion.team == TEAM_ENEMY and IsValid(minion) then
 			
 			if myHero.pos:DistanceTo(minion.pos) <= 340 + myHero.range and self.Menu.LastHit.UseQ:Value() and Ready(_Q) then
 				local QDmg = getdmg("Q", minion, myHero)
@@ -438,14 +439,14 @@ function Kindred:JungleClear()
 	for i = 1, Game.MinionCount() do
     local minion = Game.Minion(i)
 
-		if myHero.pos:DistanceTo(minion.pos) <= myHero.range and minion.team == TEAM_JUNGLE and IsValid(minion) and myHero.mana/myHero.maxMana >= self.Menu.JClear.Mana:Value() / 100 then
+		if myHero.pos:DistanceTo(minion.pos) <= myHero.range +340 and minion.team == TEAM_JUNGLE and IsValid(minion) and myHero.mana/myHero.maxMana >= self.Menu.JClear.Mana:Value() / 100 then
 
-			if self.Menu.JClear.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
-				if myHero.pos:DistanceTo(minion.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
+			if self.Menu.JClear.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then 
+				if myHero.pos:DistanceTo(minion.pos) <= (340 + myHero.range) and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
 					Control.CastSpell(HK_Q, minion.pos)				
 				end
 				if myHero.pos:DistanceTo(minion.pos) <= 500 then 
-					local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * myHero.range
+					local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * 340
 					Control.CastSpell(HK_Q, castPos)				
 				end
 			end
@@ -465,7 +466,7 @@ function Kindred:Clear()
 	for i = 1, Game.MinionCount() do
     local minion = Game.Minion(i)
 
-		if myHero.pos:DistanceTo(minion.pos) <= myHero.range and minion.team == TEAM_ENEMY and IsValid(minion) and myHero.mana/myHero.maxMana >= self.Menu.Clear.Mana:Value() / 100 then
+		if myHero.pos:DistanceTo(minion.pos) <= myHero.range +340 and minion.team == TEAM_ENEMY and IsValid(minion) and myHero.mana/myHero.maxMana >= self.Menu.Clear.Mana:Value() / 100 then
 
 			if self.Menu.Clear.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
 				if myHero.pos:DistanceTo(minion.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
@@ -491,13 +492,12 @@ end
 function Kindred:KillSteal()
 	for i, target in pairs(EnemyHeroes()) do
 	
-		if myHero.pos:DistanceTo(target.pos) <= myHero.range and IsValid(target) then
+		if myHero.pos:DistanceTo(target.pos) <= myHero.range +340 and IsValid(target) then
 		
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and self.Menu.ks.UseQ:Value() and Ready(_Q) then
-				local QDmg = getdmg("Q", target, myHero)
-				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range				
+				local QDmg = getdmg("Q", target, myHero)			
 				if QDmg >= target.health then
-					Control.CastSpell(HK_Q, castPos)
+					Control.CastSpell(HK_Q, target.pos)
 				end
 			end			
 			
