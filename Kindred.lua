@@ -24,7 +24,7 @@ do
         Lua = {
             Path = SCRIPT_PATH,
             Name = "Kindred.lua",
-            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.lua"
+            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Kindred.lua"
         },
         Version = {
             Path = SCRIPT_PATH,
