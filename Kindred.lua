@@ -18,7 +18,7 @@ require('PussyDamageLib')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.03
+    local Version = 0.04
     
     local Files = {
         Lua = {
@@ -216,7 +216,7 @@ end
 function Kindred:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.03"})
+self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.04"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
@@ -361,11 +361,11 @@ if target == nil then return end
 		
 		if self.Menu.Combo.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") and QDmg < target.health then 
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
-				Control.CastSpell(HK_Q, target.pos)				
+				Control.CastSpell(HK_Q)				
 			end
 			if myHero.pos:DistanceTo(target.pos) <= 500 then 
 				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
-				Control.CastSpell(HK_Q, castPos)				
+				Control.CastSpell(HK_Q)				
 			end
 		end	
 
@@ -373,7 +373,7 @@ if target == nil then return end
 			Control.CastSpell(HK_W, target.pos)
 		end	
 
-		if myHero.pos:DistanceTo(target.pos) <= myHero.range and self.Menu.Combo.UseE:Value() and Ready(_E) and not self:QBuff() then
+		if myHero.pos:DistanceTo(target.pos) <= myHero.range and self.Menu.Combo.UseE:Value() and Ready(_E) then
 			Control.CastSpell(HK_E, target)
 		end			
 	end	
@@ -386,11 +386,11 @@ if target == nil then return end
 			
 		if self.Menu.Harass.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then
-				Control.CastSpell(HK_Q, target.pos)				
+				Control.CastSpell(HK_Q)				
 			end
 			if myHero.pos:DistanceTo(target.pos) <= 500 then 
 				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
-				Control.CastSpell(HK_Q, castPos)				
+				Control.CastSpell(HK_Q)				
 			end
 		end	
 
@@ -443,11 +443,11 @@ function Kindred:JungleClear()
 
 			if self.Menu.JClear.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then 
 				if myHero.pos:DistanceTo(minion.pos) <= (340 + myHero.range) and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
-					Control.CastSpell(HK_Q, minion.pos)				
+					Control.CastSpell(HK_Q)				
 				end
 				if myHero.pos:DistanceTo(minion.pos) <= 500 then 
 					local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * 340
-					Control.CastSpell(HK_Q, castPos)				
+					Control.CastSpell(HK_Q)				
 				end
 			end
 
@@ -470,11 +470,11 @@ function Kindred:Clear()
 
 			if self.Menu.Clear.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
 				if myHero.pos:DistanceTo(minion.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
-					Control.CastSpell(HK_Q, minion.pos)				
+					Control.CastSpell(HK_Q)				
 				end
 				if myHero.pos:DistanceTo(minion.pos) <= 500 then 
 					local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * myHero.range
-					Control.CastSpell(HK_Q, castPos)				
+					Control.CastSpell(HK_Q)				
 				end
 			end
 	
