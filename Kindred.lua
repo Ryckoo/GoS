@@ -18,7 +18,7 @@ require('PussyDamageLib')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.04
+    local Version = 0.05
     
     local Files = {
         Lua = {
@@ -216,7 +216,7 @@ end
 function Kindred:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.04"})
+self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.05"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
@@ -330,10 +330,10 @@ function Kindred:Draw()
   if myHero.dead then return end
                                                  
 	if self.Menu.Drawing.DrawW:Value() and Ready(_W) then
-    Draw.Circle(myHero, 500, 1, Draw.Color(225, 225, 125, 10))
+    Draw.Circle(myHero, 570, 1, Draw.Color(225, 225, 125, 10))
 	end
 	if self.Menu.Drawing.DrawE:Value() and Ready(_E) then
-    Draw.Circle(myHero, myHero.range, 1, Draw.Color(225, 225, 125, 10))
+    Draw.Circle(myHero, myHero.range + 70, 1, Draw.Color(225, 225, 125, 10))
 	end			
 end
 
@@ -369,11 +369,11 @@ if target == nil then return end
 			end
 		end	
 
-		if myHero.pos:DistanceTo(target.pos) <= 500 and self.Menu.Combo.UseW:Value() and Ready(_W) and not self:QBuff() then
+		if myHero.pos:DistanceTo(target.pos) <= 570 and self.Menu.Combo.UseW:Value() and Ready(_W) and not self:QBuff() then
 			Control.CastSpell(HK_W, target.pos)
 		end	
 
-		if myHero.pos:DistanceTo(target.pos) <= myHero.range and self.Menu.Combo.UseE:Value() and Ready(_E) then
+		if myHero.pos:DistanceTo(target.pos) <= myHero.range +70 and self.Menu.Combo.UseE:Value() and Ready(_E) then
 			Control.CastSpell(HK_E, target)
 		end			
 	end	
@@ -388,17 +388,12 @@ if target == nil then return end
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then
 				Control.CastSpell(HK_Q)				
 			end
-			if myHero.pos:DistanceTo(target.pos) <= 500 then 
-				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
-				Control.CastSpell(HK_Q)				
-			end
-		end	
-
-		if myHero.pos:DistanceTo(target.pos) <= 500 and self.Menu.Harass.UseW:Value() and Ready(_W) and not self:QBuff() then
+		end
+		if myHero.pos:DistanceTo(target.pos) <= 570 and self.Menu.Harass.UseW:Value() and Ready(_W) then
 				Control.CastSpell(HK_W, target.pos)
 		end	
 
-		if myHero.pos:DistanceTo(target.pos) <= myHero.range and self.Menu.Harass.UseE:Value() and Ready(_E) and not self:QBuff() then
+		if myHero.pos:DistanceTo(target.pos) <= myHero.range + 70 and self.Menu.Harass.UseE:Value() and Ready(_E) then
 			Control.CastSpell(HK_E, target)
 		end			
 	end	
@@ -411,21 +406,20 @@ function Kindred:LastHit()
 		if myHero.pos:DistanceTo(minion.pos) <= myHero.range +340 and minion.team == TEAM_ENEMY and IsValid(minion) then
 			
 			if myHero.pos:DistanceTo(minion.pos) <= 340 + myHero.range and self.Menu.LastHit.UseQ:Value() and Ready(_Q) then
-				local QDmg = getdmg("Q", minion, myHero)
-				local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * myHero.range				
+				local QDmg = getdmg("Q", minion, myHero)				
 				if QDmg >= minion.health then
 					Control.CastSpell(HK_Q, castPos)
 				end
 			end				
 			
-			if myHero.pos:DistanceTo(minion.pos) <= 500 and self.Menu.LastHit.UseW:Value() and Ready(_W) then
+			if myHero.pos:DistanceTo(minion.pos) <= 570 and self.Menu.LastHit.UseW:Value() and Ready(_W) then
 				local WDmg = getdmg("W", minion, myHero)
 				if WDmg >= minion.health then
 					Control.CastSpell(HK_W) 
 				end
 			end	
 			
-			if myHero.pos:DistanceTo(minion.pos) <= myHero.range and self.Menu.LastHit.UseE:Value() and Ready(_E) then
+			if myHero.pos:DistanceTo(minion.pos) <= myHero.range +70 and self.Menu.LastHit.UseE:Value() and Ready(_E) then
 				local EDmg = getdmg("E", minion, myHero)
 				if EDmg >= minion.health then
 				Control.CastSpell(HK_E, minion)
@@ -451,11 +445,11 @@ function Kindred:JungleClear()
 				end
 			end
 
-			if myHero.pos:DistanceTo(minion.pos) <= 500 and self.Menu.JClear.UseW:Value() and Ready(_W) and not self:QBuff() then
+			if myHero.pos:DistanceTo(minion.pos) <= 500 and self.Menu.JClear.UseW:Value() and Ready(_W) then
 				Control.CastSpell(HK_W)
 			end 
 			
-			if myHero.pos:DistanceTo(minion.pos) <= myHero.range and self.Menu.JClear.UseE:Value() and Ready(_E) and not self:QBuff() then
+			if myHero.pos:DistanceTo(minion.pos) <= myHero.range +70 and self.Menu.JClear.UseE:Value() and Ready(_E) then
 				Control.CastSpell(HK_E, minion)
 			end	
 		end
@@ -478,11 +472,11 @@ function Kindred:Clear()
 				end
 			end
 	
-			if myHero.pos:DistanceTo(minion.pos) <= 500 and self.Menu.Clear.UseW:Value() and Ready(_W) and not self:QBuff() then
+			if myHero.pos:DistanceTo(minion.pos) <= 570 and self.Menu.Clear.UseW:Value() and Ready(_W) then
 				Control.CastSpell(HK_W)
 			end	 
 			
-			if myHero.pos:DistanceTo(minion.pos) <= myHero.range and self.Menu.Clear.UseE:Value() and Ready(_E) and not self:QBuff() then
+			if myHero.pos:DistanceTo(minion.pos) <= myHero.range + 70 and self.Menu.Clear.UseE:Value() and Ready(_E) then
 				Control.CastSpell(HK_E, minion)
 			end	
 		end
@@ -501,14 +495,14 @@ function Kindred:KillSteal()
 				end
 			end			
 			
-			if myHero.pos:DistanceTo(target.pos) <= 500 and self.Menu.ks.UseW:Value() and Ready(_W) and not self:QBuff() then
+			if myHero.pos:DistanceTo(target.pos) <= 570 and self.Menu.ks.UseW:Value() and Ready(_W) then
 				local WDmg = getdmg("W", target, myHero)
 				if WDmg >= target.health then
 					Control.CastSpell(HK_W)
 				end
 			end	
 
-			if myHero.pos:DistanceTo(target.pos) <= myHero.range and self.Menu.ks.UseE:Value() and Ready(_E) and not self:QBuff() then
+			if myHero.pos:DistanceTo(target.pos) <= myHero.range +70 and self.Menu.ks.UseE:Value() and Ready(_E) then
 				local EDmg = getdmg("E", target, myHero)
 				if EDmg >= target.health then
 					Control.CastSpell(HK_E, target)
