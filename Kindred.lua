@@ -18,7 +18,7 @@ require('PussyDamageLib')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.01
+    local Version = 0.02
     
     local Files = {
         Lua = {
@@ -384,7 +384,7 @@ if target == nil then return end
 	if IsValid(target) and myHero.mana/myHero.maxMana >= self.Menu.Harass.Mana:Value() / 100 then
 			
 		if self.Menu.Harass.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
-			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then e
+			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then
 				Control.CastSpell(HK_Q, target.pos)				
 			end
 			if myHero.pos:DistanceTo(target.pos) <= 500 then 
