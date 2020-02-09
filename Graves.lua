@@ -24,21 +24,22 @@ end
 require('GamsteronPrediction')
 
 
+--[[
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.01
+    local Version = 0.02
     
     local Files = {
         Lua = {
             Path = SCRIPT_PATH,
-            Name = "Graves.lua",
-            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.lua"
+            Name = "Chogath.lua",
+            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.lua"
         },
         Version = {
             Path = SCRIPT_PATH,
-            Name = "Graves.version",
-            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.version"
+            Name = "Chogath.version",
+            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.version"
         }
     }
     
@@ -61,9 +62,9 @@ do
         local NewVersion = tonumber(ReadFile(Files.Version.Path, Files.Version.Name))
         if NewVersion > Version then
             DownloadFile(Files.Lua.Url, Files.Lua.Path, Files.Lua.Name)
-            print("New RycKo's Graves Version Press 2x F6")
+            print("New Yoshi-Chogath Version Press 2x F6")
         else
-            print("Graves loaded")
+            print("Chogath loaded")
         end
     
     end
@@ -71,7 +72,7 @@ do
     AutoUpdate()
 
 end
-
+]]
 
 
 ----------------------------------------------------
@@ -200,6 +201,19 @@ local function GetDistance(p1, p2)
 	return math.sqrt(GetDistanceSqr(p1, p2))
 end
 
+local function GetMinionCount(range, pos)
+    local pos = pos.pos
+	local count = 0
+	for i = 1,Game.MinionCount() do
+	local hero = Game.Minion(i)
+	local Range = range * range
+		if hero.team ~= TEAM_ALLY and hero.dead == false and GetDistanceSqr(pos, hero.pos) < Range then
+		count = count + 1
+		end
+	end
+	return count
+end
+	
 ----------------------------------------------------
 --|                Champion               		|--
 ----------------------------------------------------
@@ -245,7 +259,7 @@ Type = _G.SPELLTYPE_LINE, Delay = 0.25, Radius = 100, Range = 1800, Speed = 1400
 function Graves:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.01"})
+self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.02"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
@@ -255,8 +269,10 @@ self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
 
 --LaneClear Menu
 self.Menu:MenuElement({type = MENU, id = "Clear", name = "Clear Mode"})	
-	self.Menu.Clear:MenuElement({id = "UseQ", name = "[Q]", value = true})	
+	self.Menu.Clear:MenuElement({id = "UseQ", name = "[Q]", value = true})
+	self.Menu.Clear:MenuElement({id = "countQ", name = "[Q] min Minions", value = 2, min = 0, max = 7, identifier = "Minion/s"})	
 	self.Menu.Clear:MenuElement({id = "UseW", name = "[W]", value = true})	
+	self.Menu.Clear:MenuElement({id = "countW", name = "[W] min Minions", value = 2, min = 0, max = 7, identifier = "Minion/s"})
 	self.Menu.Clear:MenuElement({id = "UseE", name = "[E]", value = true})
 	self.Menu.Clear:MenuElement({id = "Mana", name = "Min Mana", value = 40, min = 0, max = 100, identifier = "%"})
 		
@@ -447,11 +463,16 @@ function Graves:Clear()
 		if myHero.pos:DistanceTo(minion.pos) <= 1000 and minion.team == TEAM_ENEMY and IsValid(minion) and myHero.mana/myHero.maxMana >= self.Menu.Clear.Mana:Value() / 100 then		
 			
 			if myHero.pos:DistanceTo(minion.pos) <= 925 and self.Menu.Clear.UseQ:Value() and Ready(_Q) and not myHero.pathing.isDashing then
+				local Qcount = GetMinionCount(175, minion)
+				if Qcount >= self.Menu.Clear.countQ:Value() then
 				Control.CastSpell(HK_Q, minion.pos)	
+				end
 			end
-
 			if myHero.pos:DistanceTo(minion.pos) <= 950 and self.Menu.Clear.UseW:Value() and Ready(_W) and not myHero.pathing.isDashing then
+				local Wcount = GetMinionCount(175, minion)
+				if Wcount >= self.Menu.Clear.countW:Value() then
 				Control.CastSpell(HK_W, minion.pos)	
+				end
 			end
 			
 			if self.Menu.Clear.UseE:Value() and Ready(_E) then
