@@ -24,7 +24,6 @@ end
 require('GamsteronPrediction')
 
 
---[[
 -- [ AutoUpdate ]
 do
     
@@ -33,13 +32,13 @@ do
     local Files = {
         Lua = {
             Path = SCRIPT_PATH,
-            Name = "Chogath.lua",
-            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.lua"
+            Name = "Graves.lua",
+            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.lua"
         },
         Version = {
             Path = SCRIPT_PATH,
-            Name = "Chogath.version",
-            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.version"
+            Name = "Graves.version",
+            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.version"
         }
     }
     
@@ -62,9 +61,9 @@ do
         local NewVersion = tonumber(ReadFile(Files.Version.Path, Files.Version.Name))
         if NewVersion > Version then
             DownloadFile(Files.Lua.Url, Files.Lua.Path, Files.Lua.Name)
-            print("New Yoshi-Chogath Version Press 2x F6")
+            print("New RycKo's Graves Version Press 2x F6")
         else
-            print("Chogath loaded")
+            print("Graves loaded")
         end
     
     end
@@ -72,7 +71,7 @@ do
     AutoUpdate()
 
 end
-]]
+
 
 
 ----------------------------------------------------
