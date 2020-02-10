@@ -38,7 +38,7 @@ do
         },
         Version = {
             Path = SCRIPT_PATH,
-            Name = "Craves.version",
+            Name = "Graves.version",
             Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.version"
         }
     }
