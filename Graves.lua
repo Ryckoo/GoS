@@ -64,7 +64,7 @@ do
             DownloadFile(Files.Lua.Url, Files.Lua.Path, Files.Lua.Name)
             print("New RycKo_Graves Version Press 2x F6")
         else
-            print("Craves loaded")
+            print("Graves loaded")
         end
     
     end
