@@ -24,22 +24,22 @@ end
 require('GamsteronPrediction')
 
 
---[[
+
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.02
+    local Version = 0.03
     
     local Files = {
         Lua = {
             Path = SCRIPT_PATH,
-            Name = "Chogath.lua",
-            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.lua"
+            Name = "Graves.lua",
+            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.lua"
         },
         Version = {
             Path = SCRIPT_PATH,
-            Name = "Chogath.version",
-            Url = "https://raw.githubusercontent.com/Pussykate/GoS/master/PussyIrelia.version"
+            Name = "Craves.version",
+            Url = "https://raw.githubusercontent.com/Ryckoo/GoS/master/Graves.version"
         }
     }
     
@@ -62,9 +62,9 @@ do
         local NewVersion = tonumber(ReadFile(Files.Version.Path, Files.Version.Name))
         if NewVersion > Version then
             DownloadFile(Files.Lua.Url, Files.Lua.Path, Files.Lua.Name)
-            print("New Yoshi-Chogath Version Press 2x F6")
+            print("New RycKo_Graves Version Press 2x F6")
         else
-            print("Chogath loaded")
+            print("Craves loaded")
         end
     
     end
@@ -72,7 +72,6 @@ do
     AutoUpdate()
 
 end
-]]
 
 
 ----------------------------------------------------
@@ -214,6 +213,53 @@ local function GetMinionCount(range, pos)
 	return count
 end
 	
+local function HasBuff(unit, buffname)
+    for i = 0, unit.buffCount do
+        local buff = unit:GetBuff(i)
+        if buff.name == buffname and buff.count > 0 then 
+            return true
+        end
+    end
+    return false
+end
+
+local function UndyingBuffs(unit)
+    if HasBuff(unit, 'JudicatorIntervention') then
+        return true
+    end
+    if HasBuff(unit, 'TaricR') then
+        return true
+    end
+    if HasBuff(unit, 'kindredrnodeathbuff') then
+        return true
+    end
+    if HasBuff(unit, 'ChronoShift') or HasBuff(unit, 'chronorevive') then
+        return true
+    end
+    if HasBuff(unit, 'UndyingRage') then
+        return true
+    end
+    if HasBuff(unit,'JaxCounterStrike') then
+        return true
+    end
+    if HasBuff(unit, 'FioraW') then
+        return true
+    end
+    if HasBuff(unit, 'aatroxpassivedeath') then
+        return true
+    end
+    if HasBuff(unit, 'VladimirSanguinePool') then
+        return true
+    end
+    if HasBuff(unit, 'KogMawIcathianSurprise') then
+        return true
+    end
+    if HasBuff(unit, 'KarthusDeathDefiedBuff') then
+        return true
+    end
+    return false
+end
+
 ----------------------------------------------------
 --|                Champion               		|--
 ----------------------------------------------------
@@ -259,7 +305,7 @@ Type = _G.SPELLTYPE_LINE, Delay = 0.25, Radius = 100, Range = 1800, Speed = 1400
 function Graves:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.02"})
+self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.03"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
@@ -489,9 +535,9 @@ function Graves:Clear()
 end
 
 function Graves:KillSteal()
-	for i, target in pairs(EnemyHeroes()) do
+    for i, target in pairs(EnemyHeroes()) do
 
-		if myHero.pos:DistanceTo(target.pos) <= 2000 and IsValid(target) then
+        if myHero.pos:DistanceTo(target.pos) <= 2000 and IsValid(target) and not UndyingBuffs(target) then
 		
 			if self.Menu.ks.UseE:Value() and Ready(_E) then	
 			local QDmg = getdmg("Q", target, myHero)
