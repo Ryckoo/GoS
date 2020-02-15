@@ -28,7 +28,7 @@ require('GamsteronPrediction')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.03
+    local Version = 0.04
     
     local Files = {
         Lua = {
@@ -64,7 +64,7 @@ do
             DownloadFile(Files.Lua.Url, Files.Lua.Path, Files.Lua.Name)
             print("New RycKo_Graves Version Press 2x F6")
         else
-            print("Graves loaded")
+            print("Craves loaded")
         end
     
     end
@@ -305,14 +305,16 @@ Type = _G.SPELLTYPE_LINE, Delay = 0.25, Radius = 100, Range = 1800, Speed = 1400
 function Graves:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.03"})
+self.Menu = MenuElement({type = MENU, id = "Rycko_Graves", name = "Graves Version 0.04"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
 	self.Menu.Combo:MenuElement({id = "UseQ", name = "[Q]", value = true})	
 	self.Menu.Combo:MenuElement({id = "UseW", name = "[W]", value = true})
 	self.Menu.Combo:MenuElement({id = "UseE", name = "[E]", value = true})	
+	self.Menu.Combo:MenuElement({id = "UseR", name = "[R]", value = true})
 
+		
 --LaneClear Menu
 self.Menu:MenuElement({type = MENU, id = "Clear", name = "Clear Mode"})	
 	self.Menu.Clear:MenuElement({id = "UseQ", name = "[Q]", value = true})
@@ -349,10 +351,6 @@ self.Menu:MenuElement({type = MENU, id = "ks", name = "KillSteal Settings"})
 	self.Menu.ks:MenuElement({id = "UseR", name = "[R]", value = true})	
 	self.Menu.ks:MenuElement({id = "UseE", name = "Use[E] for Gapclose (Full Spells Dmg)", value = true})
 
---AntiGapClose 
-self.Menu:MenuElement({type = MENU, id = "AntiGap", name = "AntiGapclose Mode"})
-	self.Menu.AntiGap:MenuElement({id = "UseE", name = "[E]", value = true})		
-
 --Drawing 
 self.Menu:MenuElement({type = MENU, id = "Drawing", name = "Drawings Mode"})
 	self.Menu.Drawing:MenuElement({id = "DrawQ", name = "Draw [Q] Range", value = true})
@@ -377,7 +375,7 @@ local Mode = GetMode()
 	end		
 	
 	self:KillSteal()
-	self:AntiGapClose()	
+
   	
 end
  
@@ -402,19 +400,9 @@ function Graves:Draw()
 	end			
 end
 
-function Graves:AntiGapClose()
-	for i, target in ipairs(EnemyHeroes()) do
-		if myHero.pos:DistanceTo(target.pos) <= 1000 and IsValid(target) and self.Menu.AntiGap.UseE:Value() and Ready(_E) then
-			if target.pathing.isDashing and target.pathing.dashSpeed > 500 and GetDistance(target.pos, myHero.pos) > GetDistance(Vector(target.pathing.endPos), myHero.pos) then
-			local castPos = myHero.pos:Extended(target.pos, -425)	
-				Control.CastSpell(HK_E, castPos)
-			end	
-		end
-	end
-end	
 
 function Graves:Combo()
-local target = GetTarget(1000)     	
+local target = GetTarget(2000)     	
 if target == nil then return end
 	if IsValid(target) then
 		
@@ -433,16 +421,34 @@ if target == nil then return end
 		end
 		
 		if self.Menu.Combo.UseE:Value() and Ready(_E) then
-			if myHero.pos:DistanceTo(target.pos) <= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
+			if myHero.pos:DistanceTo(target.pos) >= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
+				Control.CastSpell(HK_E, mousePos)				
+			end
+			if myHero.pos:DistanceTo(target.pos) <= 425 then 
 				Control.CastSpell(HK_E, target.pos)				
 			end
-			if myHero.pos:DistanceTo(target.pos) <= 350 then 
-				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
-				Control.CastSpell(HK_E, castPos)				
-			end
-		end		
-	end	
-end	
+		end
+		if self.Menu.Combo.UseR:Value() and Ready(_R) then
+			if myHero.pos:DistanceTo(target.pos) <= 1000 then
+				local pred = GetGamsteronPrediction(target, RData, myHero)
+					local RDmg = getdmg("R", target, myHero, 1)	
+				if RDmg >= target.health and pred.Hitchance >= self.Menu.Pred.PredR:Value() + 1 and not myHero.pathing.isDashing then
+					Control.CastSpell(HK_R, pred.CastPosition)
+					end
+				end
+
+				if myHero.pos:DistanceTo(target.pos) > 1000 and myHero.pos:DistanceTo(target.pos) < 1800 then
+					local pred = GetGamsteronPrediction(target, R2Data, myHero) 
+					local RDmg = getdmg("R", target, myHero, 1)
+					if RDmg >= target.health and pred.Hitchance >= self.Menu.Pred.PredR:Value() + 1 and not myHero.pathing.isDashing then
+						Control.CastSpell(HK_R, pred.CastPosition)
+					end
+
+				end
+			end		
+		end	
+end
+
 
 function Graves:Harass()
 local target = GetTarget(1000)     	
@@ -464,12 +470,11 @@ if target == nil then return end
 		end
 		
 		if self.Menu.Harass.UseE:Value() and Ready(_E) then
-			if myHero.pos:DistanceTo(target.pos) <= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
-				Control.CastSpell(HK_E, target.pos)				
+			if myHero.pos:DistanceTo(target.pos) >= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
+				Control.CastSpell(HK_E, mousePos)				
 			end
-			if myHero.pos:DistanceTo(target.pos) <= 350 then 
-				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
-				Control.CastSpell(HK_E, castPos)				
+			if myHero.pos:DistanceTo(target.pos) <= 425 then 
+				Control.CastSpell(HK_E, target.pos)				
 			end
 		end			
 	end	
