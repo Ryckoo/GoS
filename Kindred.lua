@@ -18,7 +18,7 @@ require('PussyDamageLib')
 -- [ AutoUpdate ]
 do
     
-    local Version = 0.05
+    local Version = 0.06
     
     local Files = {
         Lua = {
@@ -217,7 +217,7 @@ end
 function Kindred:LoadMenu()                     
 	
 --MainMenu
-self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.05"})
+self.Menu = MenuElement({type = MENU, id = "RycKo_Kindred", name = "Kindred v 0.06"})
 		
 --ComboMenu  
 self.Menu:MenuElement({type = MENU, id = "Combo", name = "Combo Mode"})
