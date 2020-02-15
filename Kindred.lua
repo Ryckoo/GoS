@@ -73,6 +73,7 @@ local TEAM_JUNGLE = 300
 local Orb
 local Allies, Enemies, Turrets, Units = {}, {}, {}, {}
 local TableInsert = table.insert
+local Q
 
 function LoadUnits()
 	for i = 1, Game.HeroCount() do
@@ -357,18 +358,18 @@ function Kindred:Combo()
 local target = GetTarget(myHero.range + 340)     	
 if target == nil then return end
 	if IsValid(target) then
-	local QDmg = getdmg("Q", target, myHero)
 		
-		if self.Menu.Combo.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") and QDmg < target.health then 
+		if self.Menu.Combo.UseQ:Value() and Ready(_Q) then 
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
-				Control.CastSpell(HK_Q)				
+				Control.CastSpell(HK_Q)
+		
 			end
 			if myHero.pos:DistanceTo(target.pos) <= 500 then 
 				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
 				Control.CastSpell(HK_Q)				
 			end
 		end	
-
+		
 		if myHero.pos:DistanceTo(target.pos) <= 570 and self.Menu.Combo.UseW:Value() and Ready(_W) and not self:QBuff() then
 			Control.CastSpell(HK_W, target.pos)
 		end	
@@ -384,11 +385,16 @@ local target = GetTarget(myHero.range +340)
 if target == nil then return end
 	if IsValid(target) and myHero.mana/myHero.maxMana >= self.Menu.Harass.Mana:Value() / 100 then
 			
-		if self.Menu.Harass.UseQ:Value() and Ready(_Q) and not HasBuff(myHero, "KindredRNoDeathBuff") then
+		if self.Menu.Harass.UseQ:Value() and Ready(_Q)  then
 			if myHero.pos:DistanceTo(target.pos) <= 340 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then
 				Control.CastSpell(HK_Q)				
 			end
-		end
+			if myHero.pos:DistanceTo(target.pos) <= 500 then 
+				local castPos = Vector(target) - (Vector(myHero) - Vector(target)):Perpendicular():Normalized() * myHero.range
+				Control.CastSpell(HK_Q)				
+			end
+		end	
+		
 		if myHero.pos:DistanceTo(target.pos) <= 570 and self.Menu.Harass.UseW:Value() and Ready(_W) then
 				Control.CastSpell(HK_W, target.pos)
 		end	
@@ -439,12 +445,7 @@ function Kindred:JungleClear()
 				if myHero.pos:DistanceTo(minion.pos) <= (340 + myHero.range) and myHero.pos:DistanceTo(minion.pos) > myHero.range then 
 					Control.CastSpell(HK_Q)				
 				end
-				if myHero.pos:DistanceTo(minion.pos) <= 500 then 
-					local castPos = Vector(minion) - (Vector(myHero) - Vector(minion)):Perpendicular():Normalized() * 340
-					Control.CastSpell(HK_Q)				
-				end
 			end
-
 			if myHero.pos:DistanceTo(minion.pos) <= 500 and self.Menu.JClear.UseW:Value() and Ready(_W) then
 				Control.CastSpell(HK_W)
 			end 
