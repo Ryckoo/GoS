@@ -424,9 +424,6 @@ if target == nil then return end
 			if myHero.pos:DistanceTo(target.pos) >= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
 				Control.CastSpell(HK_E, mousePos)				
 			end
-			if myHero.pos:DistanceTo(target.pos) <= 425 then 
-				Control.CastSpell(HK_E, target.pos)				
-			end
 		end
 		if self.Menu.Combo.UseR:Value() and Ready(_R) then
 			if myHero.pos:DistanceTo(target.pos) <= 1000 then
@@ -472,9 +469,6 @@ if target == nil then return end
 		if self.Menu.Harass.UseE:Value() and Ready(_E) then
 			if myHero.pos:DistanceTo(target.pos) >= 425 + myHero.range and myHero.pos:DistanceTo(target.pos) > myHero.range then 
 				Control.CastSpell(HK_E, mousePos)				
-			end
-			if myHero.pos:DistanceTo(target.pos) <= 425 then 
-				Control.CastSpell(HK_E, target.pos)				
 			end
 		end			
 	end	
